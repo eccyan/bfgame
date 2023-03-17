@@ -4,7 +4,7 @@ Creates games using the Brainfxxk, based on using Rust, wasm-bindgen, and WebAss
 
 Sorry! the project can only display images with WebAssembly's own extended BF parser at the moment.
 
-Demo: https://main.d32dg7qoqgsldu.amplifyapp.com/
+Demo: https://main.d31dg7qoqgsldu.amplifyapp.com/
 
 ## Prerequisites
 
