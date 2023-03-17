@@ -1,0 +1,13 @@
+{
+  "name": "bfgame",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "serve": "cd web; http-server"
+  },
+  "dependencies": {
+  },
+  "devDependencies": {
+    "http-server": "^13.0.1"
+  }
+}
