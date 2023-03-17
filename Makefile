@@ -17,7 +17,7 @@ update: ;@echo "Updating ${PROJECT}.....";
 
 clean: ;@echo "Cleaning ${PROJECT}.....";
 	@cargo clean
-	@rm -rf ./src/pkg
+	@rm -rf ./web/pkg
 	@rm -rf node_modules
 
 serve: ;@echo "Starting ${PROJECT}'s local development server...";
