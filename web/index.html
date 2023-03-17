@@ -8,17 +8,17 @@
 </head>
 <body>
     <main style="width: 80%;">
-      <canvas id="screen" style="
+      <canvas id="screen" with="256" height="240" style="
     border: solid;
       "></canvas>
       <textarea id="bf-code" rows="10" cols="30">
-  one cell is one byte
-  -                    cell to 255
-  [&gt;- ---------------- cell to 239
-   [&gt;-.+               next cell to 255 and out
-    &gt;--.&gt;---.&gt;.       0 and out
-   &lt;&lt;&lt;&lt;-]              loop
-  +&lt;-]                 loop
+one cell is one byte
+-                    cell to 255
+[&gt;- ---------------- cell to 239
+ [&gt;-.                next cell to 255 and out
+  &gt;---.&gt;-.+&gt;-.+      0 and out
+ &lt;&lt;&lt;&lt;-]              loop
++&lt;-]                 loop
       </textarea>
       <button id="run-btn">Run</button>
     </main>

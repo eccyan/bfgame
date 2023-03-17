@@ -73,10 +73,8 @@ impl BfInterpreter {
                 ',' => {
                 }
                 '[' => {
-                    log("loop in");
                 }
                 ']' => {
-                    log("loop out");
                     if self.memory[self.memory_pointer] != 0 {
                         let mut loop_count = 1;
                         let mut prev_idx = self.source_pointer;

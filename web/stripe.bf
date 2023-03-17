@@ -16,6 +16,8 @@ one cell is one byte
 
 one cell is one byte
 -                    cell to 255
- [>-.+               next cell to 255 and out
-  >---.>--.>-.       0 and out
+[>- ---------------- cell to 239
+ [>-.                next cell to 255 and out
+  >---.>-.+>-.+      0 and out
  <<<<-]              loop
++<-]                 loop
