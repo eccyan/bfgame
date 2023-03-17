@@ -17,6 +17,19 @@ function getStringFromWasm0(ptr, len) {
     return cachedTextDecoder.decode(getUint8Memory0().subarray(ptr, ptr + len));
 }
 
+let cachedInt32Memory0 = null;
+
+function getInt32Memory0() {
+    if (cachedInt32Memory0 === null || cachedInt32Memory0.byteLength === 0) {
+        cachedInt32Memory0 = new Int32Array(wasm.memory.buffer);
+    }
+    return cachedInt32Memory0;
+}
+
+function getArrayU8FromWasm0(ptr, len) {
+    return getUint8Memory0().subarray(ptr / 1, ptr / 1 + len);
+}
+
 let WASM_VECTOR_LEN = 0;
 
 const cachedTextEncoder = new TextEncoder('utf-8');
@@ -100,6 +113,29 @@ export class BfInterpreter {
         return BfInterpreter.__wrap(ret);
     }
     /**
+    * @returns {Uint8Array}
+    */
+    copy_front_buffer() {
+        try {
+            const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
+            wasm.bfinterpreter_copy_front_buffer(retptr, this.ptr);
+            var r0 = getInt32Memory0()[retptr / 4 + 0];
+            var r1 = getInt32Memory0()[retptr / 4 + 1];
+            var v0 = getArrayU8FromWasm0(r0, r1).slice();
+            wasm.__wbindgen_free(r0, r1 * 1);
+            return v0;
+        } finally {
+            wasm.__wbindgen_add_to_stack_pointer(16);
+        }
+    }
+    /**
+    * @returns {number}
+    */
+    get_front_buffer_ptr() {
+        const ret = wasm.bfinterpreter_get_front_buffer_ptr(this.ptr);
+        return ret;
+    }
+    /**
     */
     update() {
         wasm.bfinterpreter_update(this.ptr);
@@ -140,6 +176,22 @@ export class Buffer {
     constructor() {
         const ret = wasm.buffer_new();
         return Buffer.__wrap(ret);
+    }
+    /**
+    * @returns {Uint8Array}
+    */
+    get_front_buffer() {
+        try {
+            const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
+            wasm.buffer_get_front_buffer(retptr, this.ptr);
+            var r0 = getInt32Memory0()[retptr / 4 + 0];
+            var r1 = getInt32Memory0()[retptr / 4 + 1];
+            var v0 = getArrayU8FromWasm0(r0, r1).slice();
+            wasm.__wbindgen_free(r0, r1 * 1);
+            return v0;
+        } finally {
+            wasm.__wbindgen_add_to_stack_pointer(16);
+        }
     }
     /**
     * @returns {number}
@@ -210,6 +262,7 @@ function initMemory(imports, maybe_memory) {
 function finalizeInit(instance, module) {
     wasm = instance.exports;
     init.__wbindgen_wasm_module = module;
+    cachedInt32Memory0 = null;
     cachedUint8Memory0 = null;
 
 

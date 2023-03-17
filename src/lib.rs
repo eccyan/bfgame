@@ -35,6 +35,14 @@ impl BfInterpreter {
         }
     }
 
+    pub fn copy_front_buffer(&self) -> Vec<u8> {
+        self.buffer.get_front_buffer().clone()
+    }
+
+    pub fn get_front_buffer_ptr(&self) -> *const u8 {
+        self.buffer.get_front_buffer_ptr()
+    }
+
     pub fn update(&mut self) {
         self.buffer.transfer();
     }

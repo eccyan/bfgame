@@ -1,4 +1,4 @@
-import * as wasm from "./pkg";
+import { default as bfgameInit, BfInterpreter } from "./pkg/bfgame.js";
 
 let bfInterpreter;
 let canvas;
@@ -16,8 +16,11 @@ function resizeCanvas() {
 window.addEventListener("resize", resizeCanvas);
 
 async function init() {
-  await wasm.init();
-  bfInterpreter = new wasm.BfInterpreter();
+  await bfgameInit();
+  bfInterpreter = new BfInterpreter();
+  bfInterpreter.execute(`
+    ++++++++++[>+>+++>+++++++>++++++++++<<<<-]>>>++++++++++>->-------->++++++>-->++>++++>->++>++++++[--<++++>----<]>-.>++++++[->++<]>+.>++++[->++<]>.
+` );
 
   canvas = document.getElementById("screen");
   ctx = canvas.getContext("2d");
@@ -32,9 +35,8 @@ function update() {
   bfInterpreter.update();
 
   // フロントバッファの内容をCanvasに描画
-  const frontBufferPtr = bfInterpreter.get_front_buffer_ptr();
-  const frontBufferData = new Uint8Array(wasm.memory.buffer, frontBufferPtr, 256 * 240 * 4);
-  imageData.data.set(frontBufferData);
+  const buffer = new Uint8Array(bfInterpreter.copy_front_buffer());
+  imageData.data.set(buffer);
   ctx.putImageData(imageData, 0, 0);
 
   window.requestAnimationFrame(update);
