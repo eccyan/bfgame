@@ -1,5 +1,9 @@
 import { default as bfgameInit, BfInterpreter } from "./pkg/bfgame.js";
 
+const width = 256;
+const height = 240;
+const scaleFactor = window.devicePixelRatio || 1;
+
 let bfInterpreter;
 let canvas;
 let ctx;
@@ -8,19 +12,15 @@ let imageData;
 async function init() {
   await bfgameInit();
   bfInterpreter = new BfInterpreter();
-  bfInterpreter.execute(`
-one cell is one byte
--                    cell to 255
-[>- ---------------- cell to 239
- [>-.+               next cell to 255 and out
-  >---.>--.>-.       0 and out
- <<<<-]              loop
-+<-]                 loop
-`);
-  bfInterpreter.update();
 
   canvas = document.getElementById("screen");
   ctx = canvas.getContext("2d");
+
+  canvas.width = width * scaleFactor;
+  canvas.height = height * scaleFactor;
+
+  ctx.scale(scaleFactor, scaleFactor);
+
   imageData = ctx.createImageData(256, 240);
 
   window.requestAnimationFrame(update);
@@ -35,5 +35,16 @@ function update() {
 
   window.requestAnimationFrame(update);
 }
+
+const bfCodeInput = document.getElementById("bf-code");
+const runButton = document.getElementById("run-btn");
+
+runButton.addEventListener("click", () => {
+  const bfCode = bfCodeInput.value;
+  // Workerを使用している場合は、worker.postMessageを使用します
+  // worker.postMessage({ command: "execute", source: bfCode });
+  bfInterpreter.execute(bfCode);
+  bfInterpreter.update();
+});
 
 init();

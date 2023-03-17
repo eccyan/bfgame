@@ -113,8 +113,9 @@ impl BfInterpreter {
 
             match c {
                 '>'|'<'|'+'|'-'|'.'|','|'['|']' => {
-                    log(&format!("src: {}, mem: {}, out: {}, sval: {}, mval: {}",
+                    /*log(&format!("src: {}, mem: {}, out: {}, sval: {}, mval: {}",
                             self.source_pointer, self.memory_pointer, self.output_pointer, c, self.memory[self.memory_pointer]));
+                    */
                 }
                 _ => {}
             }
