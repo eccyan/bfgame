@@ -1,6 +1,10 @@
 # bfgame
 
-This is a bfgame on WebAssembly project using Rust and wasm-bindgen.
+Creates games using the Brainfxxk, based on using Rust, wasm-bindgen, and WebAssembly.
+
+Sorry! the project can only display images with WebAssembly's own extended BF parser at the moment.
+
+Demo: https://main.d32dg7qoqgsldu.amplifyapp.com/
 
 ## Prerequisites
 
