@@ -129,13 +129,6 @@ export class BfInterpreter {
         }
     }
     /**
-    * @returns {number}
-    */
-    get_front_buffer_ptr() {
-        const ret = wasm.bfinterpreter_get_front_buffer_ptr(this.ptr);
-        return ret;
-    }
-    /**
     */
     update() {
         wasm.bfinterpreter_update(this.ptr);
@@ -184,6 +177,22 @@ export class Buffer {
         try {
             const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
             wasm.buffer_get_front_buffer(retptr, this.ptr);
+            var r0 = getInt32Memory0()[retptr / 4 + 0];
+            var r1 = getInt32Memory0()[retptr / 4 + 1];
+            var v0 = getArrayU8FromWasm0(r0, r1).slice();
+            wasm.__wbindgen_free(r0, r1 * 1);
+            return v0;
+        } finally {
+            wasm.__wbindgen_add_to_stack_pointer(16);
+        }
+    }
+    /**
+    * @returns {Uint8Array}
+    */
+    get_back_buffer() {
+        try {
+            const retptr = wasm.__wbindgen_add_to_stack_pointer(-16);
+            wasm.buffer_get_back_buffer(retptr, this.ptr);
             var r0 = getInt32Memory0()[retptr / 4 + 0];
             var r1 = getInt32Memory0()[retptr / 4 + 1];
             var v0 = getArrayU8FromWasm0(r0, r1).slice();
@@ -248,6 +257,9 @@ async function load(module, imports) {
 function getImports() {
     const imports = {};
     imports.wbg = {};
+    imports.wbg.__wbg_log_0568d5ac64c79dcd = function(arg0, arg1) {
+        console.log(getStringFromWasm0(arg0, arg1));
+    };
     imports.wbg.__wbindgen_throw = function(arg0, arg1) {
         throw new Error(getStringFromWasm0(arg0, arg1));
     };

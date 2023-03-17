@@ -12,10 +12,6 @@ export class BfInterpreter {
 */
   copy_front_buffer(): Uint8Array;
 /**
-* @returns {number}
-*/
-  get_front_buffer_ptr(): number;
-/**
 */
   update(): void;
 /**
@@ -34,6 +30,10 @@ export class Buffer {
 * @returns {Uint8Array}
 */
   get_front_buffer(): Uint8Array;
+/**
+* @returns {Uint8Array}
+*/
+  get_back_buffer(): Uint8Array;
 /**
 * @returns {number}
 */
@@ -54,12 +54,12 @@ export interface InitOutput {
   readonly __wbg_bfinterpreter_free: (a: number) => void;
   readonly bfinterpreter_new: () => number;
   readonly bfinterpreter_copy_front_buffer: (a: number, b: number) => void;
-  readonly bfinterpreter_get_front_buffer_ptr: (a: number) => number;
   readonly bfinterpreter_update: (a: number) => void;
   readonly bfinterpreter_execute: (a: number, b: number, c: number) => void;
   readonly __wbg_buffer_free: (a: number) => void;
   readonly buffer_new: () => number;
   readonly buffer_get_front_buffer: (a: number, b: number) => void;
+  readonly buffer_get_back_buffer: (a: number, b: number) => void;
   readonly buffer_get_front_buffer_ptr: (a: number) => number;
   readonly buffer_get_back_buffer_ptr: (a: number) => number;
   readonly buffer_transfer: (a: number) => void;

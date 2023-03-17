@@ -1,8 +1,15 @@
 use wasm_bindgen::prelude::*;
+
 use std::collections::HashMap;
 
 mod video;
 use video::Buffer;
+
+#[wasm_bindgen]
+extern "C" {
+    #[wasm_bindgen(js_namespace = console)]
+    fn log(s: &str);
+}
 
 #[wasm_bindgen]
 pub struct BfInterpreter {
@@ -44,11 +51,12 @@ impl BfInterpreter {
     }
 
     pub fn execute(&mut self, source: &str) {
+        log(&format!("bf: {}", source));
         let source_chars = source.chars().collect::<Vec<_>>();
-        let mut source_iterator = source_chars.iter().enumerate();
+        self.source_pointer = 0;
 
-        while let Some((idx, &c)) = source_iterator.next() {
-            self.source_pointer = idx;
+        while self.source_pointer < source_chars.len() {
+            let c = source_chars[self.source_pointer];
 
             match c {
                 '>' => self.memory_pointer += 1,
@@ -63,30 +71,19 @@ impl BfInterpreter {
                     self.output_pointer = (self.output_pointer + 1) % (256 * 240 * 4);
                 }
                 ',' => {
-                    self.memory[self.memory_pointer] = self.memory[self.output_pointer];
-                    self.output_pointer = (self.output_pointer + 1) % (256 * 240 * 4);
                 }
                 '[' => {
-                    if self.memory[self.memory_pointer] == 0 {
-                        let mut loop_count = 1;
-                        while loop_count > 0 {
-                            if let Some((_, &next_c)) = source_iterator.next() {
-                                if next_c == '[' {
-                                    loop_count += 1;
-                                } else if next_c == ']' {
-                                    loop_count -= 1;
-                                }
-                            } else {
-                                break;
-                            }
-                        }
-                    }
+                    log("loop in");
                 }
                 ']' => {
+                    log("loop out");
                     if self.memory[self.memory_pointer] != 0 {
                         let mut loop_count = 1;
+                        let mut prev_idx = self.source_pointer;
                         while loop_count > 0 {
-                            if let Some((prev_idx, &prev_c)) = source_iterator.next_back() {
+                            prev_idx -= 1;
+                            let prev_c = Some(source_chars[prev_idx]);
+                            if let Some(prev_c) = prev_c{
                                 if prev_c == ']' {
                                     loop_count += 1;
                                 } else if prev_c == '[' {
@@ -100,15 +97,31 @@ impl BfInterpreter {
                     }
                 }
                 '!' => {
-                    let label = source_iterator
-                        .by_ref()
-                        .take_while(|&(_, &c)| c != '\n')
-                        .map(|(_, &c)| c)
-                        .collect::<String>();
-                    self.labels.insert(label.clone(), self.source_pointer);
+                    let sliced = source_chars.get(self.source_pointer..);
+                    if let Some(sliced) = sliced {
+                        let label = sliced
+                            .iter()
+                            .enumerate()
+                            .take_while(|(_, &c)| c != '\n')
+                            .map(|(_, &c)| c)
+                            .collect::<String>();
+                        self.labels.insert(label.clone(), self.source_pointer);
+                    }
                 }
                 _ => {}
             }
+
+            match c {
+                '>'|'<'|'+'|'-'|'.'|','|'['|']' => {
+                    log(&format!("src: {}, mem: {}, out: {}, sval: {}, mval: {}",
+                            self.source_pointer, self.memory_pointer, self.output_pointer, c, self.memory[self.memory_pointer]));
+                }
+                _ => {}
+            }
+
+            self.source_pointer += 1;
         }
+        log(&format!("buf: \n{:?}", self.memory));
+        log(&format!("buf: \n{:?}", self.buffer.get_back_buffer()));
     }
 }

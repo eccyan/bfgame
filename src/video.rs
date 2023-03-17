@@ -23,6 +23,10 @@ impl Buffer {
         self.front_buffer.clone()
     }
 
+    pub fn get_back_buffer(&self) -> Vec<u8> {
+        self.back_buffer.clone()
+    }
+
     pub fn get_front_buffer_ptr(&self) -> *const u8 {
         self.front_buffer.as_ptr()
     }
